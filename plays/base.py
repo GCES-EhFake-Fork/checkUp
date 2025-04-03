@@ -6,7 +6,7 @@ from typing import List
 from playwright.sync_api import TimeoutError as PlayWrightTimeoutError, sync_playwright
 
 from plays.items import AdItem, EntryItem
-from plays.timeout import PlayTimeout, PlayerTimeoutError
+from plays.timeout import PlayerTimeoutError
 from plays.exceptions import NotEnoughADSFound, ScraperNotFoundError
 from plog import logger
 
@@ -137,8 +137,7 @@ class BasePlay:
         self.pre_run()
         while self.not_enough_items(entry_item) and retries >= 0:
             try:
-                with PlayTimeout(seconds=self.timeout_seconds, name=self.name):
-                    entry_item = self.run()
+                entry_item = self.run()
                 logger.info(f"[{self.name}]: Found {len(entry_item.ads)} items.")
             except PlayWrightTimeoutError as exc:
                 logger.error(str(exc))
