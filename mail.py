@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from decouple import Csv, config
 
 
-def send_email(msg_str):
+def send_email(msg_str, subject):
     msg = MIMEText(msg_str)
     s = smtplib.SMTP(config("EMAIL_HOST"), 587)
     s.starttls()
@@ -12,6 +12,7 @@ def send_email(msg_str):
 
     from_addr = config("FROM_EMAIL")
     to_addr = config("ADMIN_EMAILS", cast=Csv())
+    msg["subject"] = subject
     msg["from"] = from_addr
     msg["to"] = ", ".join(to_addr)
     s.sendmail(from_addr, to_addr, msg.as_string())

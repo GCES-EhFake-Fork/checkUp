@@ -33,4 +33,4 @@ if __name__ == "__main__":
         msg = "The following portals did not have ads collected in the "\
             f"last 24h:\n\n {diff}"
         print(msg)
-        send_email(msg)
+        send_email(msg, subject="Monitoring information")
