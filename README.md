@@ -228,8 +228,22 @@ Para verificar o banco de dados, você pode executar o seguinte comando:
 
 copiar env.example para .env e configurar as variáveis de ambiente
 
+```
 make start
+```
+
+```
 make init_db
+```
+
+```
 make migrate_db
+```
+
+```
 make crawl_metropoles
+```
+
+```
 make scrape_no_openai
+```
