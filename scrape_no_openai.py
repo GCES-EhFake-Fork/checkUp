@@ -26,13 +26,13 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument(
     "--platform", "-p",
-    help="Domain (or slug) of the portal to scrape, e.g. metropoles.com",
+    help="Domain (or slug) of the portal to scrape, e.g. ig.com.br",
     default=None
 )
 args = parser.parse_args()
 
 # Environment fallback
-ENV_PORTAL = config("SCRAPER_PLATFORM", default="metropoles.com")
+ENV_PORTAL = config("SCRAPER_PLATFORM", default="ig.com.br")
 # CLI flag takes precedence
 TARGET_DOMAIN = args.platform or ENV_PORTAL
 # Prepare folder name for MinIO (replace dots with underscores)
