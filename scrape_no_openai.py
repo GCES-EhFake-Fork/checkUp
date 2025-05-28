@@ -74,7 +74,7 @@ def save_to_minio(client, data, bucket_name, object_name):
     try:
         if not client.bucket_exists(bucket_name):
             client.make_bucket(bucket_name)
-        json_data = json.dumps(data, ensure_ascii=False).encode('utf-8')
+        json_data = json.dumps(data, ensure_ascii=False, indent=4).encode('utf-8')
         from io import BytesIO
         data_stream = BytesIO(json_data)
         client.put_object(

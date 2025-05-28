@@ -47,9 +47,12 @@ class IGPlay(BasePlay):
             try:
                 selectors = [
                     "#conteudoNoticia p",
+                    "#noticia p",
                     "#noticiaTexto p",
-                    ".noticia-conteudo p",
-                    "article p",
+                    ".noticia-body.not-cropped p",
+                    "div[itemprop='articleBody'] p",
+                    "div.post-content.cf.entry-content.content-spacious p",
+                    "article .post-content p",
                 ]
                 for selector in selectors:
                     try:
