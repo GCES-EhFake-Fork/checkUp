@@ -16,6 +16,9 @@ crawl:
 crawl_metropoles:
 	docker compose run scraper python crawl.py metropolesspider
 
+crawl_veja:
+	docker compose run scraper python crawl.py vejaspider
+
 init_db:
 	docker compose run scraper python create_db.py
 
