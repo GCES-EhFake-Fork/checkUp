@@ -25,6 +25,9 @@ crawl_r7:
 crawl_uol:
 	docker compose run scraper python crawl.py uolspider
 
+crawl_ig:
+	docker compose run scraper python crawl.py igspider
+
 init_db:
 	docker compose run scraper python create_db.py
 
