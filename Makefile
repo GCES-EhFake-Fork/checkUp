@@ -19,6 +19,9 @@ crawl_metropoles:
 crawl_r7:
 	docker compose run scraper python crawl.py r7spider
 
+crawl_uol:
+	docker compose run scraper python crawl.py uolspider
+
 init_db:
 	docker compose run scraper python create_db.py
 
