@@ -16,6 +16,9 @@ crawl:
 crawl_metropoles:
 	docker compose run scraper python crawl.py metropolesspider
 
+crawl_veja:
+	docker compose run scraper python crawl.py vejaspider
+
 crawl_r7:
 	docker compose run scraper python crawl.py r7spider
 
@@ -28,7 +31,7 @@ init_db:
 migrate_db:
 	docker compose run scraper python migrate_db.py
 
-.PHONY: install run-backend run-frontend docker-run-backend docker-run-frontend docker-build-backend docker-build-frontend all stop down
+.PHONY: start scrape scrape_no_openai scrape_fixed scrape_working install run-backend run-frontend docker-run-backend docker-run-frontend docker-build-backend docker-build-frontend all stop down
 
 # Instalar dependências do backend e frontend
 install:
