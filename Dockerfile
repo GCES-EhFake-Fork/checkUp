@@ -1,13 +1,13 @@
 # builder
 FROM python:3.12.3 AS builder
 
-# Instala o pipenv
-RUN pip install --user pipenv
+# Instala o pipenv com versão fixa
+RUN pip install --user pipenv==2023.12.1
 
 # Cria o venv dentro do projeto
 ENV PIPENV_VENV_IN_PROJECT=1
 
-# Copia arquivos de dependência
+# Copia apenas os arquivos de dependência primeiro para melhor utilização de cache
 COPY Pipfile Pipfile.lock /usr/src/
 WORKDIR /usr/src
 
@@ -18,7 +18,7 @@ RUN /root/.local/bin/pipenv sync --dev
 RUN /usr/src/.venv/bin/python -c "import playwright; print(playwright)"
 
 # runtime
-FROM python:3.12.3 AS runtime
+FROM python:3.12.3-slim AS runtime
 
 # Copia o ambiente virtual
 COPY --from=builder /usr/src/.venv/ /usr/src/.venv/
@@ -63,21 +63,37 @@ RUN apt-get update \
 
     && rm -rf /var/lib/apt/lists/*
 
+
 # Define variáveis de ambiente
-ENV PATH=/usr/src/.venv/bin:$PATH
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PATH=/usr/src/.venv/bin:$PATH \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
+# Instala pacote do minio e playwright antes de copiar o código-fonte
+# para aproveitar melhor o cache de camadas
+RUN pip install minio==7.2.15 && \
+    playwright install --with-deps firefox
+
+# Configuração do diretório de trabalho
 WORKDIR /project
-COPY . /project
 
-# Instala pacote do minio
-RUN pip install minio==7.2.15
+# Cria usuário não-root
+RUN groupadd -r scraper && \
+    useradd --no-log-init -r -g scraper -d /project scraper && \
+    chown -R scraper:scraper /project /usr/src/.venv
 
-# Instala navegador do playwright
-RUN playwright install --with-deps firefox
+# Copia o código-fonte para o diretório de trabalho
+COPY --chown=scraper:scraper . /project
+
+# Muda para o usuário não-root
+USER scraper
+
+# Health check para verificar se o container está saudável
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)"
 
 # Install scrapy-playwright extension
 RUN pip install scrapy-playwright==0.0.43
 
+# Comando padrão ao iniciar o container
 CMD ["ipython"]
