@@ -22,6 +22,9 @@ crawl_maisgoias:
 crawl_aliadosBrasil:
 	docker compose run scraper python crawl.py aliadosbrasilspider
 
+crawl_ig:
+	docker compose run scraper python crawl.py igspider
+
 init_db:
 	docker compose run scraper python create_db.py
 
