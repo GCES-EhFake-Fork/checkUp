@@ -1,14 +1,26 @@
 # Check-up
 ![cover](https://raw.githubusercontent.com/aosfatos/check-up/refs/heads/develop/cover.png)
-O Check-up é um projeto que tem como objetivo analisar a presença de desinformação em anúncios publicitários de saúde que circulam em grandes sites de notícias do Brasil.
 
-Este repositório contém o código de uma ferramenta desenvolvida pelo [**Aos Fatos**](https://aosfatos.org) para examinar os anúncios nativos de dez portais (listados abaixo).
+O Check-up é um projeto de **extração de conteúdo de notícias** de portais brasileiros para análise de desinformação. Este repositório contém ferramentas para coletar e extrair o texto completo de notícias de diversos portais de notícia do Brasil.
 
-A ferramenta tem três módulos: um crawler que coleta links de cada site, um raspador que captura e arquiva anúncios encontrados e um classificador de anúncios por tema que usa um grande modelo de linguagem (LLM).
+## 🎯 Objetivo do Projeto
 
-Apesar de funcionar apenas com os dez sites cobertos pelo projeto, este código pode ser facilmente adaptado para ser usado em outros endereços, como mostramos abaixo.
+Este projeto foi adaptado a partir de uma ferramenta original do [**Aos Fatos**](https://aosfatos.org) que analisava anúncios publicitários. Agora, o foco é na **extração de conteúdo de notícias** para posterior análise de fake news por uma equipe especializada.
 
-O código deste projeto pode ser usado apenas para fins não-comerciais e com atribuição de crédito.
+### 🔄 Adaptação Realizada
+
+- **Antes**: Coletava anúncios publicitários para verificar fake news
+- **Agora**: Extrai conteúdo completo de notícias (título, descrição, corpo, tags) para análise de desinformação
+
+### 🏗️ Arquitetura
+
+A ferramenta possui dois módulos principais:
+- **Crawler (Spiders)**: Coleta URLs de notícias das páginas iniciais dos portais
+- **Extrator (Plays)**: Acessa cada notícia e extrai o conteúdo completo
+
+O código pode ser facilmente adaptado para novos portais de notícia, seguindo os padrões estabelecidos.
+
+**Licença**: Este código pode ser usado apenas para fins não-comerciais e com atribuição de crédito.
 
 ## 🚀 Como Rodar o Projeto
 
@@ -29,13 +41,13 @@ Este comando faz toda a configuração inicial:
 - Cria as tabelas necessárias
 - Executa as migrações
 
-### 📊 Fluxo de Coleta de Dados
+### 📊 Fluxo de Extração de Notícias
 
-O processo de coleta acontece em duas etapas principais:
+O processo de extração acontece em duas etapas principais:
 
-**🕷️ Etapa 1: Crawling (Coleta de URLs)**
+**🕷️ Etapa 1: Crawling (Coleta de URLs de Notícias)**
 
-Colete URLs de todos os portais funcionais:
+Colete URLs de notícias de todos os portais funcionais:
 ```bash
 make crawl_all_working
 ```
@@ -52,24 +64,32 @@ make crawl_ig           # Portal IG
 make crawl_folha        # Portal Folha
 ```
 
-**📰 Etapa 2: Scraping (Extração de Anúncios)**
+**📰 Etapa 2: Scraping (Extração de Conteúdo das Notícias)**
 
-Execute o scraping de todos os portais:
+Execute a extração de conteúdo de todos os portais:
 ```bash
 make scrape_all_working
 ```
 
 Ou execute por portal específico:
 ```bash
-make scrape_metropoles     # Scraping do Metrópoles
-make scrape_maisgoias      # Scraping do MaisGoiás
-make scrape_aliadosbrasil  # Scraping do AliadosBrasil
-make scrape_ig             # Scraping do IG
-make scrape_veja           # Scraping da Veja
-make scrape_r7             # Scraping do R7
-make scrape_uol            # Scraping do UOL
-make scrape_folha          # Scraping da Folha
+make scrape_metropoles     # Extração do Metrópoles
+make scrape_maisgoias      # Extração do MaisGoiás
+make scrape_aliadosbrasil  # Extração do AliadosBrasil
+make scrape_ig             # Extração do IG
+make scrape_veja           # Extração da Veja
+make scrape_r7             # Extração do R7
+make scrape_uol            # Extração do UOL
+make scrape_folha          # Extração da Folha
 ```
+
+### 📋 Conteúdo Extraído
+
+Para cada notícia, o sistema extrai:
+- **Título**: Título principal da notícia
+- **Descrição**: Subtítulo ou resumo da notícia
+- **Corpo**: Texto completo da matéria
+- **Tags**: Categorias e etiquetas associadas à notícia
 
 ### ⚡ Workflows Automatizados
 
@@ -108,8 +128,8 @@ make help
 ### � Onde os Dados São Salvos
 
 - **URLs coletadas**: Salvos no banco PostgreSQL (tabela `URLQueue`)
-- **Anúncios extraídos**: Salvos no banco PostgreSQL (tabela `Advertisement`) 
-- **Screenshots e arquivos**: Salvos no MinIO (acessível em `http://localhost:9001`)
+- **Notícias extraídas**: Salvos no banco PostgreSQL (tabela `Entry`) com título, descrição, corpo e tags 
+- **Arquivos temporários**: Salvos no MinIO (acessível em `http://localhost:9001`)
 - **Logs**: Disponíveis via `docker compose logs`
 
 ### � Configurações Importantes
@@ -118,7 +138,7 @@ make help
 - Credenciais dos portais (se necessário)
 - Configurações do banco PostgreSQL
 - Configurações do MinIO para armazenamento
-- Chave da API OpenAI (opcional, para classificação)
+- Configurações de timeout e retry para extração
 
 ---
 
@@ -147,8 +167,7 @@ Este projeto coleta dados dos seguintes portais brasileiros:
 As seguintes tabelas são criadas automaticamente durante o setup:
 
 - **Portal**: Informações dos portais analisados
-- **Entry**: Notícias coletadas de cada portal  
-- **Advertisement**: Anúncios encontrados nas notícias
+- **Entry**: Notícias coletadas de cada portal com título, descrição, corpo e tags
 - **URLQueue**: Fila de URLs para o processo de scraping
 - **QueueStatus**: Status de cada fila de scraping
 
@@ -165,6 +184,21 @@ As seguintes tabelas são criadas automaticamente durante o setup:
 - Cada portal tem um spider Scrapy (`spiders/`) e um script Playwright (`plays/`)
 - Para adicionar novo portal, siga o modelo dos arquivos existentes
 - O scraping aceita argumentos de timeout e plataforma via CLI
+
+### 📚 Guias de Contribuição
+**⚠️ IMPORTANTE**: Antes de contribuir, leia os tutoriais apropriados:
+
+- **[TUTORIAL_CRIACAO_DO_ZERO.md](./TUTORIAL_CRIACAO_DO_ZERO.md)** - Para criar scrapers completamente novos:
+  - Guia passo-a-passo desde a análise do portal
+  - Exemplos práticos com código completo
+  - Troubleshooting e problemas comuns
+  - Testes e validação
+
+- **[TUTORIAL_SPIDERS_PLAYS.md](./TUTORIAL_SPIDERS_PLAYS.md)** - Para adaptar scrapers existentes:
+  - Guia para adaptar spiders e plays existentes
+  - Checklist de validação para garantir qualidade
+  - Exemplos práticos de boas práticas
+  - Dicas para identificar seletores atualizados
 
 ### 📝 Fluxo de Contribuição
 - Siga as políticas de branches e commits do projeto
@@ -263,143 +297,25 @@ Para executar a coleta de todos os portais, utilize:
 
 `make crawl`
 
-### 4- Coletar Informações dos anúncios 
+### 4- Extrair Conteúdo das Notícias
 
-Após a coleta das notícias, o próximo passo é raspar os anúncios presentes nas páginas das notícias. Esse processo utiliza a biblioteca [Playwright](https://playwright.dev/), para simular a navegação em um browser.
+Após a coleta das URLs, o próximo passo é extrair o conteúdo completo das notícias. Esse processo utiliza a biblioteca [Playwright](https://playwright.dev/) para simular a navegação em um browser.
 
-Para executar a coleta de todos os anúncios basta executar o comando:
+Para executar a extração de todas as notícias:
 
 `make scrape`
 
-### 5- Adicionar um novo portal
+### 5- Adicionar um Novo Portal
 
-##### 5.1 - Adicionar novo portal ao Banco de Dados
-Para adicionar um novo portal as coletas, como por exemplo [Correio Braziliense](https://www.correiobraziliense.com.br/), insira as informações do portal no Banco de Dados:
+Para adicionar um novo portal, consulte o **[TUTORIAL_SPIDERS_PLAYS.md](./TUTORIAL_SPIDERS_PLAYS.md)** que contém instruções detalhadas sobre:
+- Como criar spiders para coleta de URLs
+- Como criar plays para extração de conteúdo
+- Exemplos práticos e boas práticas
+- Checklist de validação
 
-```
-make bash
+## 💾 Armazenamento de Dados
 
-python add_portal.py "Correio Braziliense" "https://www.correiobraziliense.com.br/"
-```
-
-##### 5.2 - Criar o spider
-Crie um arquivo `spiders/correio.py` com o seguinte conteúdo:
-
-```python
-import scrapy
-
-from spiders.base import BaseSpider
-from spiders.items import URLItem
-
-
-class CorreioBrazilienseSpider(BaseSpider):
-    name = "correiobraziliensespider"
-    start_urls = ["https://www.correiobraziliense.com.br/"]
-    allowed_domains = ["correiobraziliense.com.br"]
-
-    def allow_url(self, entry_url):
-        return "https://correiobraziliense.com.br" in entry_url
-
-    def parse(self, response):
-        url_item = URLItem()
-        for entry in response.css('a[title][data-tb-link]::attr(href)')
-            url = entry.attrib.get("href")
-            if url and self.allow_url(url):
-                url_item["url"] = url
-                yield url_item
-                yield scrapy.Request(url=url, callback=self.parse)
-```
-
-Este script irá buscar novas notícias publicadas na página inicial do Correio Braziliense.
-
-##### 5.3 - Criar o Script Playwright
-Também será necessário criar um script Playwright correspondente ao novo portal para coletar anúncios. Crie um arquivo em `plays/correio.py` com o seguinte código:
-
-```python
-import time
-
-from playwright.sync_api import sync_playwright
-
-from plays.base import BasePlay
-from plays.items import AdItem, EntryItem
-from plays.utils import get_or_none
-from plog import logger
-
-
-class CorreioBraziliensePlay(BasePlay):
-    name = "correiobraziliense"
-    n_expected_ads = 10  # Add the minimum amount of expected ads
-
-    @classmethod
-    def match(cls, url):
-        return "correiobraziliense.com.br" in url
-
-    def find_items(self, html_content) -> AdItem:
-        return AdItem(
-            title=get_or_none(r'title="(.*?)"', html_content),
-            url=get_or_none(r'href="(.*?)"', html_content),
-            thumbnail_url=get_or_none(r'url\(&quot;(.*?)&quot;\)', html_content),
-            tag=get_or_none(r'<span class="branding-inner".*?>(.*?)<\/span>', html_content),
-        )
-
-    def pre_run(self):
-        pass
-
-    def run(self) -> EntryItem:
-        with sync_playwright() as p:
-            browser = self.launch_browser(p)
-            page = browser.new_page()
-            logger.info(f"[{self.name}] Opening URL '{self.url}'...")
-            page.goto(self.url, timeout=180_000)
-            logger.info(f"[{self.name}] Searching for ads...")
-            page.locator("#taboola-below-article-thumbnails").scroll_into_view_if_needed()
-
-            entry_screenshot_path = self.take_screenshot(page, self.url, goto=False)
-            entry_title = page.locator("title").inner_text()
-            time.sleep(self.wait_time * 2)
-
-            elements = page.locator(".videoCube")
-            ad_items = []
-            visible_elements = []
-            for i in range(elements.count()):
-                element = elements.nth(i)
-                if not element.is_visible():
-                    continue
-                visible_elements.append(element)
-                content = element.inner_html()
-                ad_item = self.find_items(content)
-                ad_items.append(ad_item)
-
-            return EntryItem(
-                title=entry_title,
-                ads=ad_items,
-                url=self.url,
-                screenshot_path=entry_screenshot_path,
-            )
-```
-
-Este script irá procurar por anúncios nativos em cada umas das notícias coletadas no
-portal Correio Braziliense.
-
-**Nota:** o método `run` é responsavel por procurar os anúncios na estrutura HTML do site. Ele
-deve ser desenvolvido de acordo com estrutura de cada portal.
-
-## Classificação dos anúncios com LLM
-Cada anúncio coletado é classificado em uma das 45 categorias descritas em `llm/categories.py`.
-Esta classificação é opcional, para ativá-la basta adicionar sua chave de API da OpenAI à variável `OPENAI_API_KEY`.
-Para mais informações acesse o site da [OpenAI](https://platform.openai.com/docs/api-reference/api-keys).
-
-## Armazenamento de arquivos
-Durante a coleta de anúncios, o script que simula o navegador irá registrar capturas de tela (`screenshots`) das páginas de notícias dos portais e das páginas dos anúncios.
-
-Para armazenar essas imagens, é necessário configurar um [Bucket S3](https://aws.amazon.com/pt/s3/) na Amazon Web Services (AWS) e atualizar as credenciais de acesso no arquivo `.env` com os seguintes parâmetros:
-
-- **AWS_ACCESS_KEY_ID**
-- **AWS_SECRET_ACCESS_KEY**
-- **AWS_S3_REGION_NAME**
-- **AWS_BUCKET_NAME**
-
-Os endereços S3 das imagens serão registrados no banco de dados do projeto, enquanto os arquivos das imagens serão armazenados no bucket configurado.
+Os dados extraídos são armazenados no banco PostgreSQL e arquivos temporários no MinIO. Para configurações específicas de armazenamento, consulte o arquivo `.env`.
 
 ## Importante
 Os scripts dependem da estrutura HTML dos portais e podem precisar de ajustes após atualizações nos sites.
@@ -419,32 +335,27 @@ Para verificar o banco de dados, você pode executar o seguinte comando:
     docker compose run scraper python check_db.py
 ```
 
-## Para nosso caso de uso
+## 🚀 Exemplo de Uso Rápido
 
-```
+```bash
+# Setup inicial (só uma vez)
 make setup
-```
 
-```
+# Iniciar serviços
 make start
-```
 
-```
-make crawl_metropoles # ou qualquer outro portal de notícias.
-```
+# Coletar URLs de um portal específico
+make crawl_metropoles  # ou qualquer outro portal de notícias
 
-```
-make scrape_no_openai # ou qualquer outro portal de notícias.
-```
+# Extrair conteúdo das notícias
+make scrape_metropoles  # ou qualquer outro portal de notícias
 
-```
-make stop # para parar os serviços.
-```
+# Parar serviços
+make stop
 
-```
-make clean # para limpar os serviços.
-```
+# Limpar serviços
+make clean
 
-```
-make help # para ver todos os comandos disponíveis.
+# Ver todos os comandos disponíveis
+make help
 ```
