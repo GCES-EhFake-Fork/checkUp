@@ -19,8 +19,40 @@ class TerraPlay(BasePlay):
         with sync_playwright() as p:
             browser = self.launch_browser(p, viewport={"width": 1600, "height": 1000})
             page = browser.new_page()
+            
+            # Bloquear recursos pesados/ads para acelerar
+            blocked_domains = (
+                "doubleclick.net",
+                "googlesyndication.com",
+                "google-analytics.com",
+                "analytics.google.com",
+                "clarity.ms",
+                "tailtarget.com",
+                "flashtalking.com",
+                "googletagmanager.com",
+            )
+
+            def block_ads(route, request):
+                try:
+                    if request.resource_type in {"image", "media", "font", "stylesheet"}:
+                        return route.abort()
+                    if any(d in request.url for d in blocked_domains):
+                        return route.abort()
+                except Exception:
+                    pass
+                return route.continue_()
+
+            page.route("**/*", block_ads)
+            page.set_default_navigation_timeout(60_000)
+            page.set_default_timeout(15_000)
+
             logger.info(f"[{self.name}] Opening URL '{self.url}'...")
-            page.goto(self.url, timeout=180_000)
+            page.goto(self.url, timeout=60_000, wait_until="domcontentloaded")
+            # Sincroniza com o conteúdo principal sem esperar recursos de terceiros
+            try:
+                page.wait_for_selector("h1", timeout=15_000)
+            except Exception:
+                pass
 
             # Título
             title = ""
@@ -39,6 +71,11 @@ class TerraPlay(BasePlay):
                             break
                 except Exception:
                     continue
+            if not title:
+                try:
+                    title = page.title().strip()
+                except Exception:
+                    title = ""
 
             # Descrição
             description = ""
@@ -63,6 +100,9 @@ class TerraPlay(BasePlay):
                 ".article__content--body p, .article__content--body h2",
                 ".article__content--body",       
                 ".article__content",
+                ".special-article__content--body p, .special-article__content--body h2",
+                ".special-article__content--body",
+                ".special-article__content",
                 ".content",
                 ".c-news__body",
             ]:

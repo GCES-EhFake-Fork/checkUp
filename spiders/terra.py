@@ -40,7 +40,7 @@ class TerraSpider(BaseSpider):
     
     #  Seções que não são notícias
     BLACKLISTED_SECTIONS = {
-        "videos", "podcast", "podcasts", "blogs", "colunas", "especiais", "ao-vivo", "story", "amp"
+        "videos", "podcast", "podcasts", "blogs", "colunas", "especiais", "ao-vivo", "story", "amp", "apostas"
     }
 
     def allow_url(self, url: str) -> bool:
