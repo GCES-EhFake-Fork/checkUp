@@ -96,9 +96,6 @@ class TerraPlay(BasePlay):
                 except Exception:
                     continue
 
-            if not description:
-                description = "-"
-
             # Corpo da notícia
             body = ""
             for selector in [
