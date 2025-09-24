@@ -40,7 +40,8 @@ class TerraSpider(BaseSpider):
     
     #  Seções que não são notícias
     BLACKLISTED_SECTIONS = {
-        "videos", "podcast", "podcasts", "blogs", "colunas", "especiais", "ao-vivo", "story", "amp", "apostas"
+        "videos", "podcast", "podcasts", "blogs", "colunas", "especiais",
+        "ao-vivo", "story", "amp", "apostas", "parceiros", "avisolegal"
     }
 
     def allow_url(self, url: str) -> bool:
@@ -69,10 +70,9 @@ class TerraSpider(BaseSpider):
         
         slug = segments[-1]
 
-        # Heurística de slug de notícia
-        if slug.count('-') >= 3 or len(slug) > 30 or slug.endswith('.html'):
-            return True
-        return False
+        # Aceita somente se terminar com .html e tiver slug descritivo
+        return slug.endswith('.html') and (slug.count('-') >= 3)
+
 
     def _block_ads(self, route, request):
         try:
