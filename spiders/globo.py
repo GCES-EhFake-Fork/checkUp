@@ -28,8 +28,7 @@ class GloboSpider(BaseSpider):
     }
 
     BLACKLISTED_SECTIONS = {
-        "videos", "podcast", "podcasts", "blogs", "colunas", "especiais",
-        "ao-vivo", "story", "amp", "assinante", "newsletter", "revista",
+        "videos", "podcast", "podcasts", "blogs", "colunas", "assinante", "clube-o-globo",
     }
 
     def allow_url(self, url: str) -> bool:
@@ -59,8 +58,8 @@ class GloboSpider(BaseSpider):
 
         slug = segments[-1]
 
-        # Slug com hifens ou suficientemente longo indica notícia
-        return (slug.count('-') >= 2) or (len(slug) > 30)
+        # Slug deve terminar com .ghtml e ter ao menos 3 hífens
+        return slug.endswith('.ghtml') and (slug.count('-') >= 3)
 
     def start_requests(self):
         for url in self.start_urls:

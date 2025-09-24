@@ -112,6 +112,9 @@ crawl_ig:
 crawl_folha:
 	docker compose run scraper python crawl.py folhaspider
 
+crawl_globo:
+	docker compose run scraper python crawl.py globospider
+
 # Workflow completo de coleta de URLs
 crawl_all_working:
 	@echo "Executando crawl de todos os portais funcionais..."
