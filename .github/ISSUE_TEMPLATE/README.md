@@ -29,6 +29,25 @@ Use este template para reportar bugs e problemas encontrados no projeto.
 - Problemas de configuração
 - Comportamento inesperado
 
+### 📚 [Proposta de Documentação](documentacao.md)
+Use este template quando quiser propor melhorias, correções ou criar nova documentação para o projeto.
+
+**Quando usar:**
+- Documentação existente está desatualizada ou incorreta
+- Precisa criar nova documentação ou tutorial
+- Quer melhorar a clareza ou completude da documentação
+- Identificou lacunas na documentação atual
+
+### ✨ [Nova Funcionalidade](nova-feature.md)
+Use este template quando quiser propor uma nova funcionalidade que não envolve adaptação ou criação de scrapers.
+
+**Quando usar:**
+- Quer propor melhorias na arquitetura do sistema
+- Precisa de nova integração com ferramenta ou API
+- Quer adicionar funcionalidades auxiliares (logging, monitoramento, etc.)
+- Propor melhorias na interface web ou API
+- Sugerir novos testes ou validações
+
 ## 📚 Antes de Contribuir
 
 1. **Leia os tutoriais**:
