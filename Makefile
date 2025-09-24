@@ -112,6 +112,9 @@ crawl_ig:
 crawl_folha:
 	docker compose run scraper python crawl.py folhaspider
 
+crawl_jornalDeBrasilia: 
+	docker compose run scraper python crawl.py jornaldebrasiliaspider
+
 # Workflow completo de coleta de URLs
 crawl_all_working:
 	@echo "Executando crawl de todos os portais funcionais..."
@@ -123,6 +126,7 @@ crawl_all_working:
 	@make crawl_aliadosBrasil
 	@make crawl_ig
 	@make crawl_folha
+	@make crawl_jornalDeBrasilia
 	@echo "Crawl de todos os portais concluído!"
 
 # Workflow completo de scraping
