@@ -29,7 +29,6 @@ jobs:
             const runUrl = workflow.html_url;
             const triggeringActor = workflow.triggering_actor?.login || 'unknown';
 
-            // Buscar issues existentes para falhas de CI neste branch
             const existingIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -52,7 +51,6 @@ jobs:
             });
 
             if (existingFailureIssue) {
-              // Atualizar issue existente
               const comment = `## 🔄 Nova Falha de CI Detectada
 
             **Data/Hora**: ${currentDate}  
@@ -125,7 +123,6 @@ jobs:
               
               console.log(`Created new CI failure issue #${newIssue.data.number}`);
               
-              // Mencionar o autor do commit se não for um bot
               if (triggeringActor !== 'dependabot[bot]' && triggeringActor !== 'github-actions[bot]') {
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
@@ -154,7 +151,6 @@ jobs:
             const sha = workflow.head_sha;
             const runUrl = workflow.html_url;
 
-            // Buscar issues de falha de CI abertas para este branch
             const openIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -177,7 +173,6 @@ jobs:
                 minute: '2-digit'
               });
               
-              // Comentar que foi resolvido
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -195,7 +190,6 @@ jobs:
             *Fechamento automático pelo sistema de CI.*`
               });
               
-              // Fechar a issue
               await github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,

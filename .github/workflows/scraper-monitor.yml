@@ -2,9 +2,8 @@ name: Scraper Health Monitor
 
 on:
   schedule:
-    # Executa todo dia às 6h da manhã (hora de Brasília aproximada)
     - cron: "0 9 * * *"
-  workflow_dispatch: # Permite execução manual
+  workflow_dispatch:
 
 jobs:
   monitor-scrapers:
@@ -34,26 +33,22 @@ jobs:
         run: |
           echo "FAILED_SCRAPERS=" >> $GITHUB_OUTPUT
 
-          # Lista de portais para testar
           portals=("uol" "globo" "folha" "estadao" "veja" "r7" "ig" "terra" "metropoles")
           failed_portals=""
 
           for portal in "${portals[@]}"; do
             echo "Testing $portal..."
             
-            # Tentar executar um teste básico do scraper
             if ! python -c "
           import sys
           sys.path.append('.')
           try:
-              # Tentar importar o spider
               exec(f'from spiders.{portal.replace(\"-\", \"\")} import *')
               print(f'{portal} spider import: OK')
           except Exception as e:
               print(f'{portal} spider import: FAILED - {e}')
               sys.exit(1)
           try:
-              # Tentar importar o play
               exec(f'from plays.{portal.replace(\"-\", \"\")} import *')  
               print(f'{portal} play import: OK')
           except Exception as e:
@@ -111,7 +106,6 @@ jobs:
               });
               
               if (existingIssue) {
-                // Atualizar issue existente
                 const comment = `## 🔄 Falha Recorrente Detectada
 
             **Data/Hora**: ${currentDate}  
@@ -133,7 +127,6 @@ jobs:
                 console.log(`Updated existing issue for ${scraper} #${existingIssue.number}`);
                 
               } else {
-                // Criar nova issue
                 const issueTitle = `[SCRAPER] Falha no Scraper - ${portalName}`;
                 const issueBody = `## 🚨 Health Check Failed - ${portalName}
 
@@ -204,7 +197,6 @@ jobs:
             const failedScrapers = '${{ steps.scraper-test.outputs.FAILED_SCRAPERS }}';
             const failedList = failedScrapers ? failedScrapers.split(',').filter(s => s.trim()) : [];
 
-            // Buscar issues de scraper abertas
             const openIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -217,7 +209,6 @@ jobs:
             );
 
             for (const issue of scraperIssues) {
-              // Extrair nome do scraper da issue
               const titleMatch = issue.title.match(/\[SCRAPER\] Falha no Scraper - (.+)/);
               if (!titleMatch) continue;
               
@@ -236,7 +227,6 @@ jobs:
                   minute: '2-digit'
                 });
                 
-                // Comentar que foi resolvido
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -253,7 +243,6 @@ jobs:
             *Fechamento automático pelo monitor de scrapers.*`
                 });
                 
-                // Fechar a issue
                 await github.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
