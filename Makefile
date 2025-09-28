@@ -94,6 +94,8 @@ scrape_brasildefato:
 scrape_jornaldaparaiba:
 	docker compose exec scraper python scrape_no_openai.py --platform jornaldaparaiba.com.br
 
+scrape_brasildefato:
+	docker compose exec scraper python scrape_no_openai.py --platform brasildefato.com.br
 	
 # Crawler para todos os portais ou específicos
 crawl:
@@ -129,6 +131,9 @@ crawl_brasildefato:
 	
 crawl_jornaldaparaiba:
 	docker compose run scraper python crawl.py jornaldaparaiba
+	
+crawl_brasildefato:
+	docker compose run scraper python crawl.py brasildefato
 
 # Workflow completo de coleta de URLs
 crawl_all_working:
@@ -143,6 +148,7 @@ crawl_all_working:
 	@make crawl_folha
 	@make crawl_brasildefato
 	@make crawl_jornaldaparaiba
+	@make crawl_brasildefato
 	@echo "Crawl de todos os portais concluído!"
 
 # Workflow completo de scraping
@@ -158,6 +164,7 @@ scrape_all_working:
 	@make scrape_folha
 	@make scrape_brasildefato
 	@make scrape_jornaldaparaiba
+	@make scrape_brasildefato
 	@echo "Scraping de todos os portais concluído!"
 
 # Pipeline completo: crawl + scrape
