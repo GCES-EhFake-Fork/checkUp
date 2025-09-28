@@ -240,6 +240,16 @@ docker compose down --remove-orphans
 make prune
 ```
 
+**5. Erro "BrowserType.launch_persistent_context: Executable doesn't exist at /project/.cache/ms-playwright/firefox-1475/firefox/"**
+```bash
+# Se o Playwright não encontrar os navegadores ou ocorrer erro de permissão, instale os navegadores e rode o scraper manualmente dentro do contêiner:
+docker compose exec --user root scraper bash
+source /usr/src/.venv/bin/activate
+playwright install --with-deps firefox
+python scrape_no_openai.py --platform metropoles.com
+
+```
+
 ### 💡 Exemplos Práticos
 
 **Coleta rápida de um portal específico:**
