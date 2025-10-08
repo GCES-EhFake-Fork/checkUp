@@ -38,14 +38,6 @@ ENV PATH=/usr/src/.venv/bin:$PATH \
 
 WORKDIR /project
 
-RUN groupadd -r scraper && \
-    useradd --no-log-init -r -g scraper -d /project scraper && \
-    chown -R scraper:scraper /project /usr/src/.venv
-
-COPY --chown=scraper:scraper . /project
-
-USER scraper
-
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import sys; sys.exit(0)"
 
