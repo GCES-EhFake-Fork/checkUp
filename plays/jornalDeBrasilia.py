@@ -20,9 +20,8 @@ class JornalDeBrasiliaPlay(BasePlay):
     def run(self) -> EntryItem:
         """Executa a extração principal dos dados da página."""
         with sync_playwright() as p:
-            browser = p.chromium.launch()
+            browser = self.launch_browser(p, viewport={"width": 1920, "height": 1080})
             page = browser.new_page(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36"
             )
 
             page.route(
