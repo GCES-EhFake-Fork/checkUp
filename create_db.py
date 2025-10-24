@@ -43,6 +43,7 @@ if __name__ == "__main__":
         ("Mais Goiás", "https://www.maisgoias.com.br/", "maisgoias"),
         ("Aliados Brasil", "https://www.aliadosbrasiloficial.com.br/", "aliadosbrasil"),
         ("Jornal da Paraíba", "https://jornaldaparaiba.com.br/", "jornaldaparaiba"),
+        ("Congresso em Foco", "https://www.congressoemfoco.com.br/", "congressoemfoco"),
     ]
     portals_to_add = []
     for portal in portals:
