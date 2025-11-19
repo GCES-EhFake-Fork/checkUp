@@ -1,6 +1,7 @@
 from plays.estadao import EstadaoPlay
 from plays.folha import FolhaPlay
 from plays.globo import GloboPlay
+from plays.brasilDeFato import BrasilDeFatoPlay
 from plays.ig import IGPlay
 from plays.metropoles import MetropolesPlay
 from plays.r7 import R7Play
@@ -14,6 +15,7 @@ from plays.aliadosBrasil import AliadosBrasilPlay
 from plays.jornaldaparaiba import JornalDaParaibaPlay
 
 __all__ = [
+    BrasilDeFatoPlay,
     ClicRBSPlay,
     EstadaoPlay,
     FolhaPlay,
