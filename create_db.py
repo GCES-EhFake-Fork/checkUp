@@ -2,14 +2,7 @@ from decouple import config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from models import (
-    Advertisement,
-    Portal,
-    Entry,
-    QueueStatus,
-    URLQueue,
-)
-
+from models import Advertisement, Entry, Portal, QueueStatus, URLQueue
 
 if __name__ == "__main__":
     engine = create_engine(config("DATABASE_URL"))
@@ -43,6 +36,7 @@ if __name__ == "__main__":
         ("Mais Goiás", "https://www.maisgoias.com.br/", "maisgoias"),
         ("Aliados Brasil", "https://www.aliadosbrasiloficial.com.br/", "aliadosbrasil"),
         ("Jornal da Paraíba", "https://jornaldaparaiba.com.br/", "jornaldaparaiba"),
+        ("Faxaju", "https://www.faxaju.com.br/", "faxaju"),
     ]
     portals_to_add = []
     for portal in portals:
