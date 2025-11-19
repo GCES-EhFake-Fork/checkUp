@@ -9,18 +9,15 @@ class BaseSpider(scrapy.Spider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.selector_registry = SelectorsRegistry(db)
-        self.selector_history = {}  # Registra qual seletor funcionou
+        self.selector_history = {}
     
     def extract_field(self, response, field: str, fallback_text: str = ""):
-        """
-        Tenta extrair campo usando múltiplos seletores em ordem
-        """
+        """Tenta extrair campo usando múltiplos seletores em ordem"""
         
         selectors = self.selector_registry.get_selectors(self.name, field)
         
         for i, selector in enumerate(selectors):
             try:
-                # Tenta extrair com seletor
                 extracted = response.css(selector)
                 
                 if extracted:

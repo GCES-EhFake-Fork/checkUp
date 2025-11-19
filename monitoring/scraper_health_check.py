@@ -12,9 +12,9 @@ class ScraperHealthMonitor:
         self.alert_service = alert_service
         self.logger = logging.getLogger(__name__)
         self.thresholds = {
-            'success_rate': 0.70,  # Mínimo 70% de sucesso
-            'max_failures': 3,      # Máximo 3 falhas consecutivas
-            'stale_data': 24,       # Dados com mais de 24h são antigos
+            'success_rate': 0.70,  
+            'max_failures': 3,      
+            'stale_data': 24,       
         }
     
     def check_all_scrapers(self) -> Dict[str, Dict]:
