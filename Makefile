@@ -124,6 +124,13 @@ crawl_folha:
 crawl_jornaldaparaiba:
 	docker compose run scraper python crawl.py jornaldaparaiba
 
+# Portal Uai
+crawl_uai:
+	docker compose run scraper python crawl.py uaispider
+
+scrape_uai:
+	docker compose run scraper python scrape.py uai
+
 # Workflow completo de coleta de URLs
 crawl_all_working:
 	@echo "Executando crawl de todos os portais funcionais..."
@@ -136,6 +143,7 @@ crawl_all_working:
 	@make crawl_ig
 	@make crawl_folha
 	@make crawl_jornaldaparaiba
+	@make crawl_uai
 	@echo "Crawl de todos os portais concluído!"
 
 # Workflow completo de scraping
@@ -150,6 +158,7 @@ scrape_all_working:
 	@make scrape_uol
 	@make scrape_folha
 	@make scrape_jornaldaparaiba
+	@make scrape_uai
 	@echo "Scraping de todos os portais concluído!"
 
 # Pipeline completo: crawl + scrape
