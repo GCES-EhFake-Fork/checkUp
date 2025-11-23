@@ -12,6 +12,7 @@ from spiders.uol import UOLSpider
 from spiders.gazetaDoPovo import GazetaDoPovoSpider
 from spiders.maisGoias import MaisGoiasSpider
 from spiders.aliadosBrasil import AliadosBrasilSpider
+from spiders.agoraNoVale import AgoraNoValeSpider
 from spiders.jornaldaparaiba import JornalDaParaibaSpider
 
 __all__ = [
@@ -29,5 +30,6 @@ __all__ = [
     GazetaDoPovoSpider,
     MaisGoiasSpider,
     AliadosBrasilSpider,
+    AgoraNoValeSpider,
     JornalDaParaibaSpider,
 ]

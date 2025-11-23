@@ -88,6 +88,9 @@ scrape_uol:
 scrape_folha:
 	docker compose exec scraper python scrape_no_openai.py --platform folha.uol.com.br
 
+scrape_agoranovale:
+	docker compose exec scraper python scrape_no_openai.py --platform agoranovale.com.br
+  
 scrape_jornaldaparaiba:
 	docker compose exec scraper python scrape_no_openai.py --platform jornaldaparaiba.com.br
 
@@ -121,6 +124,9 @@ crawl_ig:
 crawl_folha:
 	docker compose run scraper python crawl.py folhaspider
 
+crawl_agoranovale:
+	docker compose run scraper python crawl.py agoranovalespider
+  
 crawl_jornaldaparaiba:
 	docker compose run scraper python crawl.py jornaldaparaiba
 
@@ -197,6 +203,7 @@ help:
 	@echo "  make crawl_aliadosBrasil - Coleta URLs do portal AliadosBrasil"
 	@echo "  make crawl_ig          - Coleta URLs do portal IG"
 	@echo "  make crawl_folha       - Coleta URLs do portal Folha"
+	@echo "  make crawl_agoranovale - Coleta URLs do portal Agora no Vale"
 	@echo ""
 	@echo "=== COMANDOS DE SCRAPING (Extração de Anúncios) ==="
 	@echo "  make scrape_all_working - Executa scraping de todos os portais funcionais"
@@ -208,6 +215,7 @@ help:
 	@echo "  make scrape_r7          - Scraping do portal R7"
 	@echo "  make scrape_uol         - Scraping do portal UOL"
 	@echo "  make scrape_folha       - Scraping do portal Folha"
+	@echo "  make scrape_agoranovale - Scraping do portal Agora no Vale"
 	@echo ""
 	@echo "=== WORKFLOWS COMPLETOS ==="
 	@echo "  make pipeline_complete  - Executa crawl + scraping de todos os portais"
@@ -255,4 +263,4 @@ all:
 
 # Parar todos os serviços
 down:
-	docker compose down
+	docker-compose down
